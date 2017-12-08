@@ -51,34 +51,116 @@ var GameSchema = new Schema({
   },  
   TotalScore: {  
    type: String  
-  }   
+  },
+  TotalScore: {  
+    type: String  
+   }    
  }, {collection:"MineGame"});  
  var users = mongoose.model('usersGroup', userSchema);  
- router.get('/games/:GroupBy', function(req, res) {  
+ 
+ router.get('/games/:GroupBy/:currentPage/:pageSize', function(req, res) {  
+  
   let GroupBy = req.params.GroupBy;
-console.log(GroupBy);
+  let currentPage = parseInt(req.params.currentPage);
+  let pageSize = parseInt(req.params.pageSize); 
+  //console.log(pageSize);
+  let startId = (currentPage-1)*pageSize;
+  
   if(GroupBy == "UserName"){
-    var userGroup = users.aggregate([
+      var userGroup =    games.find({}).count(function(error,count){ 
+        users.aggregate([
+        // {
+        //   $match:{ 'username' : 'username1' }
+        // },
+        {
+          $sort:{ 'username' : 1 }
+        },
+        {
+          $limit : pageSize
+        },
+        {
+          $group:{
+            _id: { username : "$username"},
+            GameCount: { $sum: "$game" }, 
+            TotalScore: { $sum:"$score" },
+            MinScore: { $min:"$score" },
+            MaxScore: { $max:"$score" },
+            AvgScore: { $avg:"$score" }
+          }
+        },
+        {
+            $project: {
+              _id: 0,
+              username : '$_id.username',
+              GameCount :'$GameCount',
+              MinScore : '$MinScore',
+              MaxScore : '$MaxScore',
+              AvgScore : '$AvgScore',
+              GameDuration: {  $subtract : ["$starttime","$endtime"] },
+              TotalScore : '$TotalScore',
+            }
+        }
+        ], function (err, userGroupData) {
+          if (err) {
+              console.log(err);
+              return;
+          }
+          //console.log(userGroupData);
+          return res.json({  
+              status: 'OK',  
+              TotalRows: count,
+              gamesdata: userGroupData  
+          });
+      })
+    }); 
+  } 
+  else if(GroupBy == "game"){
+    var userGroup =    games.find({}).count(function(error,count){ 
+      users.aggregate([
+      // {
+      //   $match:{ 'username' : 'username1' }
+      // },
+      {
+        $sort:{ 'game' : 1 }
+      },
+      {
+        $limit : pageSize
+      },
       {
         $group:{
-          _id: { username : "$username"},
-          GameCount: { $sum: "$game" }, 
+          _id: { game : "$game"},
+          UserCount: { $sum: "$username" }, 
           TotalScore: { $sum:"$score" },
           MinScore: { $min:"$score" },
           MaxScore: { $max:"$score" },
-          AvgScore: { $avg:"$score" },
+          AvgScore: { $avg:"$score" }
         }
+      },
+      {
+          $project: {
+            _id: 0,
+            game : '$_id.game',
+            UserCount :'$UserCount',
+            MinScore : '$MinScore',
+            MaxScore : '$MaxScore',
+            AvgScore : '$AvgScore',
+            GameDuration: {  $subtract : ["$starttime","$endtime"] },
+            TotalScore : '$TotalScore',
+          }
       }
       ], function (err, userGroupData) {
         if (err) {
             console.log(err);
             return;
         }
-        console.log(userGroupData);
-        return userGroupData;
-    }); 
-  } else{
-    console.log("Not valid Groupby");
+        //console.log(userGroupData);
+        return res.json({  
+            status: 'OK',  
+            TotalRows: count,
+            gamesdata: userGroupData  
+        });
+    })
+  }); 
   }
   
 });  
@@ -124,10 +206,6 @@ console.log(GroupBy);
       });
     });
  });  
-
- 
-
-
 
 /* GET api listing. */
 router.get('/', (req, res) => {

@@ -16,6 +16,13 @@ export class GameDashboardComponent implements OnInit {
   totalRecords: number;
   startRecord: number;
   CurrPageRecords : number;
+
+  UserData = [];
+  Columns = [];
+
+  groupBySelected: boolean = false;
+  groupByKey: string;
+
   constructor(private gamesService : GamesAppService){
     
   }
@@ -30,7 +37,13 @@ export class GameDashboardComponent implements OnInit {
   }
 
   changePage(){
-    this.loadGridData();
+    if(!this.groupBySelected){
+      this.loadGridData();
+    }
+    else{
+      this.LoadGroupByGridData();
+    }
+      
   }
 
   loadGridData(){
@@ -38,12 +51,52 @@ export class GameDashboardComponent implements OnInit {
     
     this.CurrPageRecords = (this.startRecord + this.pageSize) - 1;
 
-    console.log(this.startRecord + ' ' + this.pageSize + ' ' + this.CurrPageRecords);
+    //console.log(this.startRecord + ' ' + this.pageSize + ' ' + this.CurrPageRecords);
     this.gamesService.getAllUsers(this.currentPage, this.pageSize).subscribe(gameData => {
-      console.log(gameData);
+      
       this.totalRecords = gameData.TotalRows;
-      this.gameData = gameData.gamesdata;
-    });
+      this.UserData = gameData.gamesdata;
+      console.log(this.UserData);
     
+      this.Columns = [];
+      for(var k in this.UserData[0]) {
+        if(k != '_id')
+          this.Columns.push(k);
+      }
+      this.groupBySelected = false;
+      console.log(this.Columns);
+    });
+  }
+
+  LoadGroupByGridData(){
+    
+    if(this.groupByKey == '') this.groupByKey = 'UserName';
+    this.gamesService.getUserGroupData(this.groupByKey, this.currentPage, this.pageSize).subscribe(gameData => {
+      
+      this.totalRecords = gameData.TotalRows;
+      this.UserData = gameData.gamesdata;
+      console.log(this.UserData);
+    
+      this.Columns = [];
+      for(var k in this.UserData[0]) {
+        if(k != '_id')
+          this.Columns.push(k);
+      }
+      this.groupBySelected = true;
+      //console.log(this.Columns);
+    });
+  }
+
+  setGroupBy(groupbyKey: string){
+    this.groupByKey = groupbyKey;
+   
+  }
+
+  resetGridData(){
+    this.groupByKey = '';
+    //this.groupBySelected = false;
+    this.currentPage = 1;
+    this.pageSize = 15;
+    this.loadGridData();
   }
 }
