@@ -167,7 +167,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".body{\r\n    font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\r\n}\r\n#Users {\r\n    font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\r\n    border-collapse: collapse;\r\n    width: 100%;\r\n}\r\n\r\n#Users td, #Users th {\r\n    border: 1px solid #ddd;\r\n    padding: 8px;\r\n}\r\n\r\n#Users tr:nth-child(even){background-color: #f2f2f2;}\r\n\r\n#Users tr:hover {background-color: #ddd; cursor:pointer}\r\n\r\n#Users td {\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n    text-align: left;\r\n    background-color: #4CAF50;\r\n    color: black;\r\n}\r\n\r\n#UsersBody {\r\n    font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\r\n    font-size: 11px;\r\n    border-collapse: collapse;\r\n    width: 100%;\r\n}\r\n\r\n#UsersBody td, #UsersBody th {\r\n    border: 1px solid #ddd;\r\n    padding: 5px;\r\n}\r\n\r\n#UsersBody tr:nth-child(even){background-color: #f2f2f2;}\r\n\r\n#UsersBody tr:hover {background-color: #ddd;}\r\n\r\n#UsersBody td {\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n    text-align: left;\r\n    color: black;\r\n}\r\n\r\n.divPaging{\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n}\r\n\r\n.divGrid{\r\n    height: 50%;\r\n    padding: 12px;\r\n}", ""]);
+exports.push([module.i, ".body{\r\n    font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\r\n}\r\n\r\n#UsersBody {\r\n    font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\r\n    font-size: 12px;\r\n    border-collapse: collapse;\r\n    width: 100%;\r\n}\r\n\r\n#UsersBody tbody td, #UsersBody thead td {\r\n    border: 1px solid #ddd;\r\n    padding: 5px;\r\n}\r\n\r\n#UsersBody tbody tr:nth-child(even){background-color: #f2f2f2;}\r\n\r\n#UsersBody tbody tr:hover {background-color: #ddd;}\r\n\r\n#UsersBody thead td {\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n    text-align: left;\r\n    background-color: #4CAF50;\r\n    color: black;\r\n}\r\n\r\n.divPaging{\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n}\r\n\r\n.divGrid{\r\n    height: 50%;\r\n    padding: 12px;\r\n}", ""]);
 
 // exports
 
@@ -180,7 +180,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/game-dashboard/game-dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h3><b><u>Mini Game Analytics</u></b></h3>\n<div style=\"display: inline-block;padding:12px;\">\n<div style=\"float: left\">\n  Goto: <input type=\"number\" name=\"currpage\" [(ngModel)]=\"currentPage\" style=\"width:35px\">\n  <input type=\"button\" value=\"Go\" (click)=\"changePage()\">\n  Page Limit : <select id=\"PageSize\" [(ngModel)] = \"pageSize\" (change)=\"changePage()\">\n    <option value=\"15\">15</option>\n    <option value=\"30\">30</option>\n    <option value=\"50\">50</option>\n    <option value=\"100\">100</option>\n  </select>\n</div>\n<div style=\"float: right;\">\n    Showing {{startRecord}} - {{CurrPageRecords}} of {{totalRecords}}\n</div>\n</div>\n<div style=\"padding:12px;height:300px\">\n  <table id = 'Users'>\n    <tr>\n        <td  *ngFor=\"let constant of constants\" \n            id={{constant.id}} \n            [style.width] = \"constant.width\"\n            (click)=\"SortData(constant.id)\"><b>{{constant.name}}</b></td>\n    </tr>\n  </table>\n  <table id = 'UsersBody'>\n    <tr *ngFor=\"let gameData of gameData\" id={{gameData.id}}>\n      <td style=\"width:24px\">{{gameData.id}}</td>\n      <td style=\"width:194px\">{{gameData.username}}</td>\n      <td style=\"width:100px\">{{gameData.game}}</td>\n      <td style=\"width:100px\">{{gameData[\"difficult level\"]}}</td>\n      <td style=\"width:100px\">{{gameData[\"start time\"]}}</td>\n      <td style=\"width:100px\">{{gameData[\"end time\"]  }}</td>\n      <td style=\"width:80px\">{{gameData.score}}</td>\n    </tr>\n  </table>\n</div>"
+module.exports = "<h3><b><u>Mini Game Analytics</u></b></h3>\n<div style=\"display: inline-block;padding:12px;\">\n  <div style=\"float: left\">\n    Goto: <input type=\"number\" name=\"currpage\" [(ngModel)]=\"currentPage\" style=\"width:35px\">\n    <input type=\"button\" value=\"Go\" (click)=\"changePage()\">\n    Page Limit : <select id=\"PageSize\" [(ngModel)] = \"pageSize\" (change)=\"changePage()\">\n      <option value=\"15\">15</option>\n      <option value=\"30\">30</option>\n      <option value=\"50\">50</option>\n      <option value=\"100\">100</option>\n    </select>\n  </div>\n  <div style=\"float: right; padding-left:150px\">\n      Showing {{startRecord}} - {{CurrPageRecords}} of {{totalRecords}}\n  </div>\n  <div style=\"float: right; padding-left:150px\">\n    <input type=\"radio\" name=\"groupby\" value = \"name\" (click)=\"setGroupBy('UserName')\"> User Name\n    <input type=\"radio\" name=\"groupby\" value = \"game\"  (click)=\"setGroupBy('game')\"> Game\n    <input type=\"button\" value=\"Group By\" (click)=\"this.LoadGroupByGridData()\">\n    <input type=\"button\" value =\"Clear Group By\" (click)=\"this.resetGridData()\">\n  </div>\n</div>\n<div style=\"padding:12px;height:300px\">\n  <!-- <table id = 'Users'>\n    <tr>\n        <td  *ngFor=\"let constant of constants\" \n            id={{constant.id}} \n            [style.width] = \"constant.width\"\n            (click)=\"SortData(constant.id)\"><b>{{constant.name}}</b></td>\n    </tr>\n  </table>\n  <table id = 'UsersBody'>\n    <tr *ngFor=\"let gameData of gameData\" id={{gameData.id}}>\n      <td style=\"width:24px\">{{gameData.id}}</td>\n      <td style=\"width:194px\">{{gameData.username}}</td>\n      <td style=\"width:100px\">{{gameData.game}}</td>\n      <td style=\"width:100px\">{{gameData[\"difficult level\"]}}</td>\n      <td style=\"width:100px\">{{gameData[\"start time\"]}}</td>\n      <td style=\"width:100px\">{{gameData[\"end time\"]  }}</td>\n      <td style=\"width:80px\">{{gameData.score}}</td>\n    </tr>\n  </table> -->\n  <table id = 'UsersBody'>\n    <thead>\n        <td *ngFor=\"let column of this.Columns\" (click)=\"sortData(column)\">\n            <b>{{column | uppercase}}</b>\n        </td>\n    </thead>\n    <tbody *ngFor=\"let data of this.UserData\">\n        <tr *ngIf=\"this.groupBySelected\" >\n            <td [attr.colspan]=\"this.Columns.length\">\n               <b> {{data[this.Columns[0]] | uppercase }} </b>\n            </td>\n        </tr>\n        <tr>\n            <td *ngFor=\"let column of this.Columns\">\n                {{data[column]}}\n            </td>\n        </tr>\n        <tr *ngIf=\"this.groupBySelected\" >\n            <td [attr.colspan]=\"this.Columns.length - 1\" style=\"text-align:right\">\n               <b> TotalCount </b>\n            </td>\n            <td>\n                <b> {{data[this.Columns[this.Columns.length-1]]}} </b>\n             </td>\n        </tr>\n    </tbody>\n  </table>\n</div>"
 
 /***/ }),
 
@@ -210,6 +210,9 @@ var GameDashboardComponent = (function () {
         this.constants = __WEBPACK_IMPORTED_MODULE_1__common_Constants__["a" /* Columns */];
         this.currentPage = 1;
         this.pageSize = 15;
+        this.UserData = [];
+        this.Columns = [];
+        this.groupBySelected = false;
     }
     GameDashboardComponent.prototype.ngOnInit = function () {
         this.loadGridData();
@@ -218,18 +221,57 @@ var GameDashboardComponent = (function () {
         console.log(event);
     };
     GameDashboardComponent.prototype.changePage = function () {
-        this.loadGridData();
+        if (!this.groupBySelected) {
+            this.loadGridData();
+        }
+        else {
+            this.LoadGroupByGridData();
+        }
     };
     GameDashboardComponent.prototype.loadGridData = function () {
         var _this = this;
         this.startRecord = this.currentPage <= 1 ? 1 : (this.currentPage - 1) * this.pageSize + 1;
         this.CurrPageRecords = (this.startRecord + this.pageSize) - 1;
-        console.log(this.startRecord + ' ' + this.pageSize + ' ' + this.CurrPageRecords);
+        //console.log(this.startRecord + ' ' + this.pageSize + ' ' + this.CurrPageRecords);
         this.gamesService.getAllUsers(this.currentPage, this.pageSize).subscribe(function (gameData) {
-            console.log(gameData);
             _this.totalRecords = gameData.TotalRows;
-            _this.gameData = gameData.gamesdata;
+            _this.UserData = gameData.gamesdata;
+            console.log(_this.UserData);
+            _this.Columns = [];
+            for (var k in _this.UserData[0]) {
+                if (k != '_id')
+                    _this.Columns.push(k);
+            }
+            _this.groupBySelected = false;
+            console.log(_this.Columns);
         });
+    };
+    GameDashboardComponent.prototype.LoadGroupByGridData = function () {
+        var _this = this;
+        if (this.groupByKey == '')
+            this.groupByKey = 'UserName';
+        this.gamesService.getUserGroupData(this.groupByKey, this.currentPage, this.pageSize).subscribe(function (gameData) {
+            _this.totalRecords = gameData.TotalRows;
+            _this.UserData = gameData.gamesdata;
+            console.log(_this.UserData);
+            _this.Columns = [];
+            for (var k in _this.UserData[0]) {
+                if (k != '_id')
+                    _this.Columns.push(k);
+            }
+            _this.groupBySelected = true;
+            //console.log(this.Columns);
+        });
+    };
+    GameDashboardComponent.prototype.setGroupBy = function (groupbyKey) {
+        this.groupByKey = groupbyKey;
+    };
+    GameDashboardComponent.prototype.resetGridData = function () {
+        this.groupByKey = '';
+        //this.groupBySelected = false;
+        this.currentPage = 1;
+        this.pageSize = 15;
+        this.loadGridData();
     };
     return GameDashboardComponent;
 }());
@@ -271,11 +313,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var GamesAppService = (function () {
     function GamesAppService(http) {
         this.http = http;
+        this.serverUrl = "http://localhost:3000";
     }
     // Get all data from the API
     GamesAppService.prototype.getAllUsers = function (currentPage, pageSize) {
         //console.log(currentPage + ' ' + pageSize);
-        var url = '/api/games/' + currentPage + '/' + pageSize;
+        var url = this.serverUrl + '/api/games/' + currentPage + '/' + pageSize;
+        return this.http.get(url)
+            .map(function (res) { return res.json(); });
+    };
+    // Get all data from the API
+    GamesAppService.prototype.getUserGroupData = function (GroupBy, currentPage, pageSize) {
+        console.log(GroupBy + ' ' + currentPage + ' ' + pageSize);
+        var url = this.serverUrl + '/api/games/' + GroupBy + '/' + currentPage + '/' + pageSize;
         return this.http.get(url)
             .map(function (res) { return res.json(); });
     };
